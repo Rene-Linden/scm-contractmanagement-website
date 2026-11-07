@@ -82,7 +82,7 @@ h1 em,h2 em{color:var(--accent-kop)}
 .kopbalk{border-bottom:1px solid var(--site-lijn)}
 .nav{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-top:18px;padding-bottom:18px}
 .merk{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;letter-spacing:-.025em;font-size:17px}
-.beeldmerk{flex:none;width:36px;height:36px;border-radius:10px;background:var(--merk);color:var(--op-merk);display:flex;align-items:center;justify-content:center;font-size:16px}
+.beeldmerk{flex:none;width:36px;height:36px}
 .nav-links{display:flex;align-items:center;gap:28px;font-size:14px;font-weight:500}
 .nav-links a{text-decoration:none}
 .nav-links a:hover{text-decoration:underline;text-underline-offset:2px}
