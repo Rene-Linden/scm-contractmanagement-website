@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Besparingscalculator – SCM-contractmanagement</title>
+<meta name="description" content="Zie in een minuut wat contractbeheer je ongeveer oplevert, en wat dat afzet tegen de kosten.">
+<!-- Voorlopig alleen via de directe link (bouwopdracht §7). Zichtbaar maken: zie README. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="stijl.css">
+</head>
+<body>
+<a class="overslaan" href="#invoer">Naar de calculator</a>
+<header class="kopbalk">
+  <nav class="nav rand" aria-label="Hoofdmenu">
+    <a class="merk" href="./"><img class="beeldmerk" src="beeldmerk.png" alt="" width="36" height="36"><span>SCM-contractmanagement</span></a>
+    <div class="nav-rechts">
+      <a class="knop knop-klein knop-primair" href="mailto:info@supplychainmeneer.nl?subject=Demo%20SCM-contractmanagement" data-demo>Plan een demo</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="vlak-merk">
+    <div class="rand calc-kop">
+      <p class="label">Besparingscalculator</p>
+      <h1>Wat levert contractbeheer <em>jou</em> op?</h1>
+      <p class="calc-lede">Contracten lopen stilzwijgend door, opzegtermijnen gaan voorbij en niemand weet precies wat er loopt. Vul je eigen cijfers in en zie in een minuut wat je ongeveer laat liggen, en wat dat afzet tegen de kosten.</p>
+    </div>
+  </section>
+
+  <div class="rand calc-raster">
+    <section class="calc-paneel" id="invoer" aria-labelledby="invoer-kop">
+      <p class="label">Jouw situatie</p>
+      <h2 id="invoer-kop" class="calc-h2">Je contracten</h2>
+
+      <div class="veld">
+        <div class="veld-kop"><label for="contracten">Aantal contracten</label><input class="getal" type="number" id="contracten-getal" min="1" max="2000" step="1" aria-label="Aantal contracten, als getal"></div>
+        <input type="range" id="contracten" min="5" max="500" step="5" value="40">
+        <p class="hint">Alle lopende contracten.</p>
+      </div>
+
+      <div class="veld">
+        <div class="veld-kop"><label for="uitgaven">Jaarlijkse uitgaven aan deze contracten</label><input class="getal getal-breed" type="number" id="uitgaven-getal" min="0" max="100000000" step="1000" aria-label="Jaarlijkse uitgaven in euro, als getal"></div>
+        <input type="range" id="uitgaven" min="10000" max="2000000" step="5000" value="150000">
+        <p class="hint">Energie, telecom, lease, huur, schoonmaak, verzekeringen enz. <span class="waarde" id="uitgaven-tekst"></span></p>
+      </div>
+
+      <div class="veld">
+        <div class="veld-kop"><label for="uren">Uren per maand aan contractadministratie</label><input class="getal" type="number" id="uren-getal" min="0" max="500" step="1" aria-label="Uren per maand, als getal"></div>
+        <input type="range" id="uren" min="0" max="80" step="1" value="8">
+        <p class="hint">Zoeken, bijhouden, termijnen nagaan.</p>
+      </div>
+
+      <div class="veld">
+        <div class="veld-kop"><label for="uurtarief">Uurtarief</label><input class="getal" type="number" id="uurtarief-getal" min="0" max="500" step="5" aria-label="Uurtarief in euro, als getal"></div>
+        <input type="range" id="uurtarief" min="20" max="200" step="5" value="60">
+        <p class="hint">Interne kosten per uur. <span class="waarde" id="uurtarief-tekst"></span></p>
+      </div>
+
+      <div class="veld">
+        <div class="veld-kop"><label for="vestigingen">Aantal vestigingen</label><input class="getal" type="number" id="vestigingen-getal" min="1" max="500" step="1" aria-label="Aantal vestigingen, als getal"></div>
+        <input type="range" id="vestigingen" min="1" max="100" step="1" value="1">
+        <p class="hint">Bij 5 of meer vestigingen rekenen we ook het voordeel van gebundeld inkopen mee.</p>
+      </div>
+
+      <div class="veld">
+        <div class="veld-kop"><label for="gebruikers">Betalende gebruikers</label><input class="getal" type="number" id="gebruikers-getal" min="1" max="1000" step="1" aria-label="Betalende gebruikers, als getal"></div>
+        <input type="range" id="gebruikers" min="1" max="100" step="1" value="3">
+        <p class="hint">Wie in de app werkt. Hiermee kiezen we het pakket.</p>
+      </div>
+
+      <details class="aannames">
+        <summary>Aannames aanpassen</summary>
+        <p class="hint">Dit zijn aannames, geen gemiddelden uit de markt. Pas ze aan aan je eigen situatie.</p>
+        <div class="aanname"><label for="looptijdJaren">Gemiddelde looptijd van een contract (jaar)</label><input class="getal" type="number" id="looptijdJaren" min="1" max="20" step="0.5"></div>
+        <div class="aanname"><label for="prijsvoordeel">Prijsvoordeel door op tijd heronderhandelen of overstappen (%)</label><input class="getal" type="number" id="prijsvoordeel" min="0" max="50" step="0.5"></div>
+        <div class="aanname"><label for="overbodig">Aandeel overbodige contracten dat je vindt en opzegt (%)</label><input class="getal" type="number" id="overbodig" min="0" max="50" step="0.5"></div>
+        <div class="aanname"><label for="tijdwinst">Tijdwinst op administratie (%)</label><input class="getal" type="number" id="tijdwinst" min="0" max="100" step="5"></div>
+        <div class="aanname"><label for="bundelbaar">Aandeel uitgaven dat te bundelen is, bij 5 of meer vestigingen (%)</label><input class="getal" type="number" id="bundelbaar" min="0" max="100" step="5"></div>
+        <div class="aanname"><label for="bundelvoordeel">Bundelvoordeel op dat deel (%)</label><input class="getal" type="number" id="bundelvoordeel" min="0" max="50" step="0.5"></div>
+        <button type="button" class="knop knop-klein knop-rand" id="standaard">Terug naar de standaardaannames</button>
+      </details>
+    </section>
+
+    <section class="calc-paneel uitkomst" aria-labelledby="uitkomst-kop">
+      <p class="label">Indicatie</p>
+      <h2 id="uitkomst-kop" class="calc-h2">Wat het je oplevert</h2>
+
+      <div aria-live="polite">
+        <div class="hoofdcijfers">
+          <div>
+            <p class="cijfer-label">Netto besparing per jaar</p>
+            <p class="cijfer" id="netto"></p>
+          </div>
+          <div>
+            <p class="cijfer-label">Terugverdientijd</p>
+            <p class="cijfer cijfer-klein" id="terug"></p>
+          </div>
+        </div>
+        <p class="calc-sub" id="totaal"></p>
+      </div>
+
+      <div class="staven" id="staven"></div>
+
+      <div class="kosten">
+        <p class="cijfer-label">Kosten SCM-contractmanagement</p>
+        <p class="kosten-regel"><span id="pakket"></span><span id="kosten"></span></p>
+        <p class="hint" id="pakket-uitleg"></p>
+      </div>
+
+      <p class="hint calc-disclaimer">Dit is een indicatie op basis van jouw invoer en de aannames hierboven. Je werkelijke besparing hangt af van je contracten.</p>
+
+      <div class="calc-oproep">
+        <p><strong>Benieuwd hoe dit er met jouw contracten uitziet?</strong> In een demo van 30 minuten laten we zien hoe je eigen contracten erin komen.</p>
+        <a class="knop knop-primair" href="mailto:info@supplychainmeneer.nl?subject=Demo%20SCM-contractmanagement" data-demo id="demo">Plan een demo</a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="voet">
+  <div class="voet-romp rand">
+    <span>SCM-contractmanagement · een product van Supply Chain Meneer</span>
+    <span class="voet-links">
+      <a href="privacy.html">Privacy</a>
+      <a href="voorwaarden.html">Voorwaarden</a>
+      <a href="mailto:info@supplychainmeneer.nl">Contact</a>
+    </span>
+  </div>
+</footer>
+<script type="module" src="calculator.js"></script>
+</body>
+</html>

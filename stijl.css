@@ -215,3 +215,57 @@ h1 em,h2 em{color:var(--accent-kop)}
 .tabel table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.5;background:var(--wit)}
 .tabel th,.tabel td{padding:10px 12px;border:1px solid var(--site-lijn);text-align:left;vertical-align:top}
 .tabel th{font-weight:600}
+
+/* Besparingscalculator (besparingscalculator.html): invoer links, uitkomst rechts; stapelt op mobiel */
+.calc-kop{padding-top:64px;padding-bottom:88px}
+.calc-kop h1{color:var(--op-merk);max-width:18ch}
+.calc-kop h1 em{color:var(--accent)}
+.calc-lede{margin-top:20px;max-width:40rem;font-size:17px;line-height:1.6;color:rgb(255 255 255/.8)}
+.calc-raster{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:28px;margin-top:-48px;padding-bottom:96px;align-items:start}
+.calc-paneel{background:var(--wit);border:1px solid var(--site-lijn);border-radius:12px;padding:28px}
+.calc-h2{font-size:28px;margin-bottom:20px}
+.veld{display:grid;gap:8px;padding:16px 0;border-top:1px solid var(--lijn-zacht)}
+.veld:first-of-type{border-top:0;padding-top:0}
+.veld-kop{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.veld label,.aanname label{font-size:15px;font-weight:600}
+.hint{font-size:13px;line-height:1.5;color:var(--tekst-zacht)}
+.waarde{font-weight:600;color:var(--tekst);white-space:nowrap}
+.getal{width:6.5rem;min-height:40px;padding:6px 10px;border:1px solid var(--lijn);border-radius:8px;font:inherit;font-size:15px;text-align:right;font-variant-numeric:tabular-nums;background:var(--wit);color:var(--tekst)}
+.getal-breed{width:8.5rem}
+.getal:focus-visible,input[type=range]:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input[type=range]{width:100%;height:24px;margin:0;accent-color:var(--accent)}
+.aannames{margin-top:8px;border-top:1px solid var(--lijn);padding-top:16px}
+.aannames summary{cursor:pointer;font-weight:600;font-size:15px;min-height:32px}
+.aannames[open] summary{margin-bottom:8px}
+.aanname{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 0;border-top:1px solid var(--lijn-zacht)}
+.aanname label{font-weight:500;font-size:14px}
+.aannames .knop{margin-top:12px;background:none;color:var(--tekst);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.hoofdcijfers{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:16px;padding-bottom:16px}
+.cijfer-label{font-size:13px;color:var(--tekst-zacht)}
+.cijfer{margin-top:4px;font-family:var(--serif);font-size:48px;line-height:1.05;color:var(--accent-kop);font-variant-numeric:lining-nums tabular-nums}
+.cijfer.negatief{color:var(--fout-tekst)}
+.cijfer-klein{font-size:30px;color:var(--tekst)}
+.calc-sub{padding-bottom:20px;border-bottom:1px solid var(--lijn);font-size:14px;color:var(--tekst-zacht)}
+.staven{display:grid;gap:16px;padding:20px 0;border-bottom:1px solid var(--lijn)}
+.staaf-rij{display:grid;gap:6px}
+.staaf-kop{display:flex;justify-content:space-between;gap:12px;font-size:14px;font-weight:600}
+.staaf-kop span:last-child{font-variant-numeric:tabular-nums;white-space:nowrap}
+.staaf{height:8px;background:var(--vlak);border-radius:4px;overflow:hidden}
+.staaf i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .3s ease}
+.kosten{padding:20px 0;border-bottom:1px solid var(--lijn)}
+.kosten-regel{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;margin:4px 0;font-size:16px;font-weight:600}
+.kosten-regel span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.calc-disclaimer{margin-top:16px}
+.calc-oproep{margin-top:24px;background:var(--merk);color:var(--op-merk);border-radius:10px;padding:20px}
+.calc-oproep p{margin-bottom:16px;font-size:14px;line-height:1.6;color:rgb(255 255 255/.8)}
+.calc-oproep strong{color:var(--op-merk)}
+.calc-oproep .knop:focus-visible{outline-color:var(--op-merk)}
+@media (max-width:860px){.calc-raster{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:420px){
+  .calc-paneel{padding:20px}
+  .veld-kop{align-items:flex-start;flex-direction:column;gap:6px}
+  .aanname{flex-direction:column;align-items:flex-start;gap:6px}
+  .hoofdcijfers{grid-template-columns:1fr}
+  .cijfer{font-size:40px}
+}
+@media (prefers-reduced-motion:reduce){.staaf i{transition:none}}
