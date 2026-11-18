@@ -3,7 +3,19 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { AANNAMES, bereken, INVOER, kiesPakket } from "../besparing.js";
-import { PRIJZEN } from "../prijzen.js";
+import { prijzenUitApp } from "../prijsbron.js";
+
+// Vaste testprijzen (de conceptprijzen van 8-11-2026), zoals de app ze levert.
+const PRIJZEN = prijzenUitApp({
+  prijzen: [
+    { sleutel: "pakket_basis", bedrag: 49 },
+    { sleutel: "pakket_plus", bedrag: 99 },
+    { sleutel: "extra_gebruiker", bedrag: 9 },
+    { sleutel: "pakket_enterprise", bedrag: 15 },
+    { sleutel: "franchise_per_vestiging", bedrag: 19 },
+    { sleutel: "franchise_groepsmodule", bedrag: 495 },
+  ],
+});
 
 const rond = (x) => Math.round(x * 100) / 100;
 
@@ -52,4 +64,13 @@ test("zonder besparing geen terugverdientijd; een looptijd van 0 deelt niet door
   assert.equal(leeg.terugverdientijd, null);
   assert.equal(leeg.netto, -588);
   assert.equal(bereken(INVOER, { ...AANNAMES, looptijdJaren: 0 }, PRIJZEN).onderdelen.heronderhandelen, 0);
+});
+
+test("ontbreekt een prijs in de app, dan geen prijzen (en geen kosten)", () => {
+  assert.equal(prijzenUitApp({ prijzen: [{ sleutel: "pakket_basis", bedrag: 49 }] }), null);
+  assert.equal(prijzenUitApp(null), null);
+  const r = bereken(INVOER, AANNAMES, null, 5);
+  assert.equal(r.kosten, null);
+  assert.equal(r.netto, null);
+  assert.ok(r.besparing > 0);
 });

@@ -1,7 +1,10 @@
 // De pagina van de besparingscalculator. Rekent in de browser; er wordt niets
-// opgeslagen of verstuurd (geen cookies, geen opslag, geen verzoeken).
+// opgeslagen of verstuurd. Alleen de prijzen worden bij het laden opgehaald uit
+// de app (onderdeel E, 17-11-2026), zonder cookies en zonder tracking.
 import { AANNAMES, bereken, INVOER } from "./besparing.js";
-import { PRIJZEN } from "./prijzen.js";
+import { laadPrijzen, MODEL, prijzenUitApp } from "./prijsbron.js";
+
+let PRIJZEN = null;
 
 const $ = (id) => document.getElementById(id);
 const eur = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
@@ -54,20 +57,24 @@ const ONDERDELEN = [
 
 function toon() {
   const invoer = leesInvoer();
-  const r = bereken(invoer, leesAannames(), PRIJZEN);
-  const vanaf = PRIJZEN.concept ? "vanaf " : "";
+  const r = bereken(invoer, leesAannames(), PRIJZEN, MODEL.groep.vanafVestigingen);
+  const vanaf = MODEL.concept ? "vanaf " : "";
 
   $("uitgaven-tekst").textContent = eur.format(invoer.uitgaven) + " per jaar";
   $("uurtarief-tekst").textContent = eur.format(invoer.uurtarief) + " per uur";
 
-  $("netto").textContent = eur.format(Math.round(r.netto));
-  $("netto").classList.toggle("negatief", r.netto < 0);
+  // Zonder prijzen uit de app: alleen de besparing, nooit een verzonnen bedrag.
+  $("netto").textContent = r.netto === null ? "–" : eur.format(Math.round(r.netto));
+  $("netto").classList.toggle("negatief", r.netto !== null && r.netto < 0);
   $("terug").textContent = terugverdientijd(r.terugverdientijd);
-  $("totaal").textContent = `Besparing ${eur.format(Math.round(r.besparing))} per jaar, min de kosten van ${vanaf}${eur.format(r.kosten)} per jaar.`;
+  $("totaal").textContent =
+    r.kosten === null
+      ? `Besparing ${eur.format(Math.round(r.besparing))} per jaar. De kosten kunnen we nu niet tonen.`
+      : `Besparing ${eur.format(Math.round(r.besparing))} per jaar, min de kosten van ${vanaf}${eur.format(r.kosten)} per jaar.`;
 
   const max = Math.max(...Object.values(r.onderdelen), 1);
   $("staven").replaceChildren(
-    ...ONDERDELEN.filter(([k]) => k !== "bundelen" || invoer.vestigingen >= PRIJZEN.groep.vanafVestigingen).map(([k, naam, uitleg]) => {
+    ...ONDERDELEN.filter(([k]) => k !== "bundelen" || invoer.vestigingen >= MODEL.groep.vanafVestigingen).map(([k, naam, uitleg]) => {
       const rij = document.createElement("div");
       rij.className = "staaf-rij";
       const kop = document.createElement("div");
@@ -90,6 +97,11 @@ function toon() {
     }),
   );
 
+  if (!r.pakket) {
+    $("pakket").textContent = "Pakket";
+    $("kosten").textContent = "–";
+    $("pakket-uitleg").textContent = "De prijzen zijn op dit moment niet beschikbaar.";
+  } else {
   $("pakket").textContent = `Pakket ${r.pakket.naam}`;
   $("kosten").textContent = `${vanaf}${eur.format(r.pakket.perMaand)} per maand`;
   const t = r.pakket.toelichting;
@@ -98,10 +110,11 @@ function toon() {
       ? `${getal.format(t.vestigingen)} vestigingen × ${eur.format(t.perVestiging)} plus de groepsmodule (${eur.format(t.groepsmodule)}), per maand, excl. btw.`
       : r.pakket.naam === PRIJZEN.business.naam
         ? `${getal.format(t.gebruikers)} gebruikers × ${eur.format(PRIJZEN.business.perGebruiker)} per maand (minimaal ${PRIJZEN.business.minimumGebruikers}), excl. btw.`
-        : `${t.extraGebruikers > 0 ? `Inclusief ${t.extraGebruikers} extra ${t.extraGebruikers === 1 ? "gebruiker" : "gebruikers"}. ` : ""}Excl. btw.${PRIJZEN.concept ? " Het prijsmodel is nog niet definitief." : ""}`;
+        : `${t.extraGebruikers > 0 ? `Inclusief ${t.extraGebruikers} extra ${t.extraGebruikers === 1 ? "gebruiker" : "gebruikers"}. ` : ""}Excl. btw.${MODEL.concept ? " Het prijsmodel is nog niet definitief." : ""}`;
+  }
 
   // De uitkomst in de onderwerpregel van de demo-mail; er wordt verder niets verstuurd.
-  const onderwerp = `Demo SCM-contractmanagement – indicatie ${eur.format(Math.round(r.netto))} per jaar`;
+  const onderwerp = `Demo SCM-contractmanagement – indicatie ${eur.format(Math.round(r.netto ?? r.besparing))} per jaar`;
   for (const a of document.querySelectorAll("[data-demo]")) a.href = `mailto:info@supplychainmeneer.nl?subject=${encodeURIComponent(onderwerp)}`;
 }
 
@@ -126,3 +139,8 @@ $("standaard").addEventListener("click", () => {
 
 zetAannames(AANNAMES);
 toon();
+// De prijzen uit de app; tot ze er zijn (of als het niet lukt) alleen de besparing.
+laadPrijzen().then((antwoord) => {
+  PRIJZEN = antwoord ? prijzenUitApp(antwoord) : null;
+  toon();
+});
