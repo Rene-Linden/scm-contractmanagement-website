@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prijslijst – SCM-contractmanagement</title>
+<meta name="description" content="De prijzen van SCM-contractmanagement, per maand en exclusief btw.">
+<!-- Voorlopig verborgen tot de bedragen definitief zijn (bouwopdracht 17-11-2026, onderdeel E): geen link, niet in de sitemap, noindex. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="stijl.css">
+</head>
+<body>
+<header class="kopbalk">
+  <nav class="nav rand" aria-label="Hoofdmenu">
+    <a class="merk" href="./"><img class="beeldmerk" src="beeldmerk.png" alt="" width="36" height="36"><span>SCM-contractmanagement</span></a>
+  </nav>
+</header>
+<main class="los tekstpagina rand">
+  <h1>Prijslijst</h1>
+  <p>Alle prijzen per maand en exclusief btw, tenzij anders vermeld. Afspraken met adviesbureaus en voor franchiseformules maken we op maat.</p>
+  <div id="prijzen" aria-live="polite">
+    <p>De prijzen worden geladen…</p>
+  </div>
+  <p class="hint">De prijzen komen rechtstreeks uit SCM-contractmanagement; zo staat hier altijd de actuele prijs. Er worden geen cookies gebruikt en er wordt niets bijgehouden.</p>
+</main>
+<footer class="voet">
+  <div class="voet-romp rand">
+    <span>SCM-contractmanagement · een product van Supply Chain Meneer</span>
+  </div>
+</footer>
+<script type="module">
+  import { laadPrijzen } from "./prijsbron.js";
+
+  const GROEPEN = { pakket: "Pakketten", gebruikers: "Gebruikers", franchise: "Franchise en groepen", module: "Modules", eenmalig: "Eenmalig", adviesbureau: "Adviesbureaus" };
+  const EENHEDEN = { betalende_gebruiker: "per gebruiker per maand", klant: "per maand", vestiging: "per vestiging per maand", adviseur: "per adviseur per maand", vast_maand: "per maand", eenmalig: "eenmalig" };
+  const eur = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" });
+  const doel = document.getElementById("prijzen");
+
+  const antwoord = await laadPrijzen();
+  if (!antwoord || !Array.isArray(antwoord.prijzen) || antwoord.prijzen.length === 0) {
+    doel.innerHTML = "";
+    const p = document.createElement("p");
+    p.textContent = "De prijslijst is op dit moment niet beschikbaar. Neem contact op voor een offerte.";
+    doel.append(p);
+  } else {
+    doel.innerHTML = "";
+    const perGroep = new Map();
+    for (const p of antwoord.prijzen) {
+      if (!perGroep.has(p.groep)) perGroep.set(p.groep, []);
+      perGroep.get(p.groep).push(p);
+    }
+    for (const [groep, lijst] of perGroep) {
+      const h = document.createElement("h2");
+      h.textContent = GROEPEN[groep] ?? groep;
+      const ul = document.createElement("ul");
+      for (const p of lijst) {
+        const li = document.createElement("li");
+        const naam = document.createElement("strong");
+        naam.textContent = p.naam;
+        li.append(naam, ` – ${eur.format(p.bedrag)} ${EENHEDEN[p.eenheid] ?? ""}`);
+        ul.append(li);
+      }
+      doel.append(h, ul);
+    }
+  }
+</script>
+</body>
+</html>

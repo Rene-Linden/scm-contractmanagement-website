@@ -11,10 +11,11 @@ De publieke website op https://scm-contractmanagement.nl. Losse bestanden, geen 
 | `fonts/` | Inter en Fraunces, zelf gehost (SIL Open Font License) |
 | `besparingscalculator.html` | Besparingscalculator, alleen via de directe link (zie hieronder) |
 | `besparing.js`, `calculator.js` | De berekening (los te testen) en de pagina |
-| `prijzen.js` | Prijsmodel van de calculator: hier de prijzen aanpassen |
+| `prijsbron.js` | Haalt de prijzen uit de app en zet ze om voor de calculator; de opbouw van de pakketten (geen bedragen) |
+| `prijslijst.html` | Prijslijst uit de app, verborgen (geen link, noindex) tot de bedragen definitief zijn |
 | `tests/` | Unittests van de berekening: `node --test tests/*.test.mjs` |
 
-Geen cookies, geen tracking en geen verzoeken naar andere domeinen.
+Geen cookies en geen tracking. Eén uitzondering op "geen verzoeken naar andere domeinen" (17-11-2026, onderdeel E): de prijslijst en de calculator halen de prijzen op bij de app (`prijsbron.js`, `APP_URL`), zonder cookies en zonder referrer. Prijzen wijzig je alleen in de app (Platform → Prijslijst, vinkje "tonen op de website").
 
 ## Besparingscalculator
 
@@ -22,7 +23,7 @@ Gebouwd 8-11-2026 volgens `website/bouwopdracht-besparingscalculator.md` (in de 
 
 - Rekent alleen in de browser: geen opslag, geen cookies, geen verzoeken. De uitkomst gaat alleen mee in de onderwerpregel als de bezoeker zelf op "Plan een demo" klikt.
 - Pakketkeuze: bij 5 of meer vestigingen het groepsmodel; anders het goedkoopste pakket dat bij het aantal contracten past (Basis of Plus met extra gebruikers, of Business).
-- Zolang `concept: true` in `prijzen.js` staat, tonen de kosten als "vanaf".
+- Zolang `concept: true` in `prijsbron.js` staat, tonen de kosten als "vanaf". Ontbreekt een prijs in de app, dan toont de calculator alleen de besparing en geen kosten.
 - Getest: unittests (standaardwaarden, 1, 5 en 100 vestigingen, grenzen van de pakketten); in Chrome op desktop en 360 px, met het toetsenbord; geen netwerkverzoeken bij het rekenen.
 
 ### Zichtbaar maken (na akkoord van René)

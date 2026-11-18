@@ -45,14 +45,18 @@ export function kiesPakket(invoer, prijzen) {
   return opties.reduce((beste, o) => (o.perMaand < beste.perMaand ? o : beste));
 }
 
-/** De besparing per jaar, per onderdeel, en wat er netto overblijft. */
-export function bereken(invoer = INVOER, aannames = AANNAMES, prijzen) {
+/**
+ * De besparing per jaar, per onderdeel, en wat er netto overblijft. Zonder
+ * prijzen (de app gaf ze niet) alleen de besparing: geen pakket en geen kosten.
+ */
+export function bereken(invoer = INVOER, aannames = AANNAMES, prijzen, vanafVestigingen = prijzen?.groep.vanafVestigingen ?? 5) {
   const a = aannames;
   const heronderhandelen = a.looptijdJaren > 0 ? (invoer.uitgaven / a.looptijdJaren) * a.prijsvoordeel : 0;
   const opzeggen = invoer.uitgaven * a.overbodig;
   const tijd = invoer.urenPerMaand * 12 * invoer.uurtarief * a.tijdwinst;
-  const bundelen = invoer.vestigingen >= prijzen.groep.vanafVestigingen ? invoer.uitgaven * a.bundelbaar * a.bundelvoordeel : 0;
+  const bundelen = invoer.vestigingen >= vanafVestigingen ? invoer.uitgaven * a.bundelbaar * a.bundelvoordeel : 0;
   const besparing = heronderhandelen + opzeggen + tijd + bundelen;
+  if (!prijzen) return { onderdelen: { heronderhandelen, opzeggen, tijd, bundelen }, besparing, pakket: null, kosten: null, netto: null, terugverdientijd: null };
   const pakket = kiesPakket(invoer, prijzen);
   const kosten = pakket.perMaand * 12;
   return {
