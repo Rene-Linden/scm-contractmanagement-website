@@ -11,7 +11,7 @@ const PRIJZEN = prijzenUitApp({
     { sleutel: "pakket_basis", bedrag: 49 },
     { sleutel: "pakket_plus", bedrag: 99 },
     { sleutel: "extra_gebruiker", bedrag: 9 },
-    { sleutel: "pakket_enterprise", bedrag: 15 },
+    { sleutel: "pakket_business", bedrag: 15 },
     { sleutel: "franchise_per_vestiging", bedrag: 19 },
     { sleutel: "franchise_groepsmodule", bedrag: 495 },
   ],

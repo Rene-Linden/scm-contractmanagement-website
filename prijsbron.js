@@ -19,7 +19,8 @@ export const MODEL = {
     { naam: "Plus", sleutel: "pakket_plus", maxContracten: 200, inbegrepenGebruikers: 10 },
   ],
   extraGebruiker: "extra_gebruiker",
-  business: { naam: "Business", sleutel: "pakket_enterprise", minimumGebruikers: 10 },
+  // Business: per betalende gebruiker, minimaal 10 (prijsmodel 8-11, bevestigd 18-11-2026). Enterprise is op aanvraag en staat niet in de calculator.
+  business: { naam: "Business", sleutel: "pakket_business", minimumGebruikers: 10 },
   // Vanaf zoveel vestigingen: een prijs per vestiging plus de groepsmodule.
   groep: { naam: "Groep", vanafVestigingen: 5, perVestiging: "franchise_per_vestiging", groepsmodule: "franchise_groepsmodule" },
 };
